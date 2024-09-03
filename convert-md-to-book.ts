@@ -49,7 +49,7 @@ async function convertMarkdownToPDF() {
           margin-bottom: 1em;
         }
         h1:first-of-type { page-break-before: avoid; }
-        p { text-indent: 0.5in; }
+        p { text-indent: 0.25in; }
       </style>
     </head>
     <body>${html}</body>
