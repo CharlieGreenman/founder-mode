@@ -32,9 +32,24 @@ async function convertMarkdownToPDF() {
     <head>
       <meta charset="UTF-8">
       <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; }
-        h1 { page-break-before: always; }
+        @page {
+          margin: 2.54cm; /* 1 inch margin on all sides */
+        }
+        body {
+          font-family: 'Times New Roman', serif;
+          font-size: 12pt;
+          line-height: 1.5;
+          max-width: 6.5in; /* Standard book width */
+          margin: 0 auto;
+        }
+        h1 {
+          page-break-before: always;
+          font-size: 18pt;
+          margin-top: 2em;
+          margin-bottom: 1em;
+        }
         h1:first-of-type { page-break-before: avoid; }
+        p { text-indent: 0.5in; }
       </style>
     </head>
     <body>${html}</body>
@@ -45,7 +60,20 @@ async function convertMarkdownToPDF() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(`file://${tempHtmlPath}`, { waitUntil: 'networkidle0' });
-  await page.pdf({ path: 'book.pdf', format: 'A4' });
+  await page.pdf({
+    path: 'book.pdf',
+    format: 'A4',
+    printBackground: true,
+    displayHeaderFooter: true,
+    headerTemplate: '<div></div>',
+    footerTemplate: '<div style="font-size: 10pt; text-align: center; width: 100%;"><span class="pageNumber"></span></div>',
+    margin: {
+      top: '1in',
+      right: '1in',
+      bottom: '1in',
+      left: '1in'
+    }
+  });
   await browser.close();
 
   // Clean up temporary HTML file
