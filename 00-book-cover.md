@@ -1,6 +1,6 @@
 # Founder Mode
 
-![Founder Mode Cover Image](founder-mode.png){: style="max-height: 500px;"}
+![Founder Mode Cover Image](founder-mode.png)
 
 ## A Comprehensive Guide to Building and Scaling Successful Startups
 
