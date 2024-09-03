@@ -14,12 +14,21 @@ async function convertMarkdownToPDF() {
     return aNum - bNum;
   });
 
-  // Combine all markdown content
+  // Generate table of contents
+  let tableOfContents = '# Table of Contents\n\n';
   let combinedMarkdown = '';
+  let chapterNumber = 1;
+
   for (const file of files) {
     const content = fs.readFileSync(file, 'utf-8');
-    combinedMarkdown += content + '\n\n';
+    const chapterTitle = content.split('\n')[0].replace(/^#\s+/, '');
+    tableOfContents += `${chapterNumber}. [${chapterTitle}](#chapter-${chapterNumber})\n`;
+    combinedMarkdown += `<a id="chapter-${chapterNumber}"></a>\n\n${content}\n\n`;
+    chapterNumber++;
   }
+
+  // Combine table of contents with the rest of the content
+  combinedMarkdown = tableOfContents + '\n\n' + combinedMarkdown;
 
   // Convert markdown to HTML
   const html = marked(combinedMarkdown);
@@ -50,9 +59,15 @@ async function convertMarkdownToPDF() {
         }
         h1:first-of-type { page-break-before: avoid; }
         p { text-indent: 0.25in; }
+        #table-of-contents { page-break-after: always; }
       </style>
     </head>
-    <body>${html}</body>
+    <body>
+      <div id="table-of-contents">
+        ${marked(tableOfContents)}
+      </div>
+      ${html}
+    </body>
     </html>
   `);
 
