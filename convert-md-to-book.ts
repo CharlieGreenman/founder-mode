@@ -4,8 +4,9 @@ import { marked } from "marked";
 import puppeteer from 'puppeteer';
 
 async function convertMarkdownToPDF() {
-  // Read all markdown files in the current directory
-  const files = fs.readdirSync('.').filter(file => file.endsWith('.md'));
+  // Read all markdown files in the src directory
+  const srcDir = path.join(__dirname, 'src');
+  const files = fs.readdirSync(srcDir).filter(file => file.endsWith('.md'));
 
   // Sort files numerically by chapter number
   files.sort((a, b) => {
@@ -20,7 +21,7 @@ async function convertMarkdownToPDF() {
   let chapterNumber = 1;
 
   for (const file of files) {
-    const content = fs.readFileSync(file, 'utf-8');
+    const content = fs.readFileSync(path.join(srcDir, file), 'utf-8');
     const chapterTitle = content.split('\n')[0].replace(/^#\s+/, '');
     tableOfContents += `${chapterNumber}. [${chapterTitle}](#chapter-${chapterNumber})\n`;
     combinedMarkdown += `<a id="chapter-${chapterNumber}"></a>\n\n${content}\n\n`;
